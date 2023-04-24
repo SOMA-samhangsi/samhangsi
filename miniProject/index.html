@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="css/header.css" />
+  <link rel="stylesheet" type="text/css" href="css/today.css" />
+  <link rel="stylesheet" type="text/css" href="css/lastday.css" />
+  <link rel="stylesheet" type="text/css" href="css/popup.css" />
+  <link rel="stylesheet" type="text/css" href="css/list.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script defer src="index.js"></script>
+  <title>삼행시</title>
+</head>
+
+<body>
+  <!-- header -->
+  <header class="Navigation">
+    <img class="Logo" src="images/logo.png" />
+    <button typ="button" id="popupBtn">
+      <img class="Popup" src="images/gift.png" />
+    </button>
+  </header>
+
+  <!-- Date Header  -->
+  <div class="Container">
+    <button class="DateButton"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="Date" id="Date">4월 15일</div>
+    <button class="DateButton"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+
+  <!-- Modal Popup -->
+  <div class="modalWrap" id="modalWrap">
+    <div id="modalContent">
+      <div id="modalBody">
+        <span id="closeBtn">&times;</span>
+        <img src="images/002.png" />
+      </div>
+    </div>
+  </div>
+
+  <!-- today main container -->
+  <div class="today_container" id="today_container">
+    <form class="input-form" id="inputForm">
+      <div class="name_and_number_container">
+        <input id="name" name="name" type="text" placeholder="닉네임" />
+        <input id="number" name="number" type="text" placeholder="전화번호 뒷자리 입력" />
+      </div>
+
+      <div class="input-group">
+        <div class="input-group-item">
+          <label for="text1" class="input-group-left-column">소</label>
+          <input id="text1" name="text1" type="text" />
+        </div>
+        <div class="input-group-item">
+          <label for="text2" class="input-group-left-column">마</label>
+          <input id="text2" name="text2" type="text" />
+        </div>
+        <div class="input-group-item">
+          <label for="text3" class="input-group-left-column">인</label>
+          <input id="text3" name="text3" type="text" />
+        </div>
+      </div>
+
+      <button type="button" id="submitBtn">✏️ 등록하기</button>
+      <!--서버와 연결시 form 태그에 action 적고 button  submit으로 변경-->
+    </form>
+  </div>
+
+  <!-- last day main container -->
+  <div class="lastday_winner_container" id="lastday_winner_container">
+    <div class="lastday_winner_item">
+      <div class="lastday_winner_item_circle">소</div>
+      <div class="class lastday_winner_item_content">소고기</div>
+    </div>
+
+    <div class="lastday_winner_item">
+      <div class="lastday_winner_item_circle">마</div>
+      <div class="class lastday_winner_item_content">마이야르는</div>
+    </div>
+
+    <div class="lastday_winner_item">
+      <div class="lastday_winner_item_circle">인</div>
+      <div class="lastday_winner_item_content">인생이다</div>
+    </div>
+  </div>
+
+  <!-- total container -->
+  <div class="total-container">
+    <div class="total-continer-header">
+      <div class="total-container-header-title">
+        소마인의 베스트 삼행시✨
+      </div>
+
+      <button class="filter-btn">
+        <i class="fas fa-exchange-alt fa-rotate-90"></i>
+        추천순
+      </button>
+    </div>
+    <div class="total-continer-body"></div>
+
+  </div>
+  <div id="click-count">0</div>
+</body>
+
+</html>
+
+<template id='articleTemplate'>
+  <li class="sam" guid timestamp like>
+    <div class="rank">1</div>
+    <div class="contents">
+      <div class="contents-header">
+        <div class="contents-name">⭐ 닉네임</div>
+        <button class="myButton"><i class="far fa-heart"></i>Click Me</button>
+      </div>
+      <div class="contents-main">
+        <div class="contents-main-item">
+          <div class="contents-main-left1">소</div>
+          <div class="contents-main-right1">소데스카카</div>
+        </div>
+        <div class="contents-main-item">
+          <div class="contents-main-left2">마</div>
+          <div class="contents-main-right2">마지데스타?</div>
+        </div>
+        <div class="contents-main-item">
+          <div class="contents-main-left3">인</div>
+          <div class="contents-main-right3">이누가스키</div>
+        </div>
+      </div>
+    </div>
+  </li>
+</template>

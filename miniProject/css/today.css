@@ -1,0 +1,86 @@
+.today_container{
+  margin: 0 15%;
+  padding: 5px 0;
+  margin-top: 50px;
+}
+
+.input-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input{
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px 10px;
+  border: 1.8px solid lightgray;
+}
+
+.name_and_number_container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#name, #number{
+  margin: 5px 0;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 15px;
+  transition: all .5s ease-in;
+}
+
+#name::placeholder, #number::placeholder{
+  font-weight: 400;
+  color: gray;
+}
+
+.input-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.input-group-item{
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+.input-group-left-column{
+  font-size:25px;
+  font-weight: 600;
+  margin-right: 20px;
+  font-size: 30px;
+}
+
+#text1, #text2, #text3{
+  border-radius: 5px;
+  font-size: 25px;
+  transition: all .3s ease-in;
+}
+
+#name:focus, #number:focus, #text1:focus, #text2:focus, #text3:focus{
+  outline: 2px solid #2F58CD;
+}
+
+#submitBtn {
+  border: none;
+  background-color: #667080;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  margin-top: 25px;
+  font-size: 15px;
+  transition: transform .3s ease-in-out;
+}
+
+#submitBtn:hover{
+  transform: scale(1.1);
+}
+
+@media ( max-width: 767px ) {
+  .today_container{
+    margin-top: 20px;
+  }
+}
