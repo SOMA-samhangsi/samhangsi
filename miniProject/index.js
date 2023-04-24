@@ -43,6 +43,15 @@ async function request(url = '') {
   return await response.json();
 }
 
+async function patchData(url = '', data) {
+  const response = await fetch(url,
+  {
+    method: 'PATCH',
+    body: JSON.stringify(data)
+  });
+  return await response.json();
+}
+
 async function postData(url = '', data = {}) {
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE 등
@@ -97,6 +106,24 @@ closeBtn.onclick = function () {
 
 let counter = 0;
 
+function clickLike(event)
+{
+  let parentNode = this.parentNode.parentNode.parentNode;
+  let guid = parentNode.getAttribute("guid")
+  let lke = parseInt(parentNode.getAttribute("like")) + 1
+  let [month, date] = getDate(); 
+  let date_ = month+"-"+date
+  let url = "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/"+date_+"/"+guid+".json"
+  data = {
+    like : lke
+  }
+  patchData(url, data)
+  .then(
+    (result)=> {
+      parentNode.setAttribute("like", lke)
+    }
+  );
+}
 
 function samArticle(guid = "0", data)
 {
@@ -108,11 +135,7 @@ function samArticle(guid = "0", data)
    // let tempDiv=clone.querySelectorAll('div');
 
     const heartIcon = clone.querySelector('.myButton');
-    heartIcon.addEventListener('click', () => {
-      //DB 연동 후 게시글별 하트 수 올라가도록 변경
-      counter++;
-      clickCount.textContent = counter;
-    });
+    heartIcon.addEventListener('click', clickLike);
 
     clone.querySelector('.rank').innerHTML = rank;
     clone.querySelector('.contents-name').innerHTML = data.name;
@@ -155,11 +178,13 @@ function requestList()
   request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/'+date_+'.json'+sortOption("timestamp"))
   .then(
     (result)=> {
-    const sortedObj = sortData(result, "timestamp")
-
-      for (const key in sortedObj) {
-        if (sortedObj.hasOwnProperty(key)) {
-          samArticle(key, sortedObj[key]);
+      if(result!== null)
+      {
+        const sortedObj = sortData(result, "timestamp")
+        for (const key in sortedObj) {
+          if (sortedObj.hasOwnProperty(key)) {
+            samArticle(key, sortedObj[key]);
+          }
         }
       }
     }
