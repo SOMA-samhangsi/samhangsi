@@ -29,7 +29,6 @@ window.onload = function () {
   lastdayCon.style.display = "none";
   filter.textContent = "최신순";
   let [month, date] = getDate();
-
   let _date = month  + '-' + date;
 
   divDate = document.getElementById("Date");
@@ -87,15 +86,15 @@ submitBtn.onclick = function () {
   };
 
   let [month, date] = getDate();
-  let date_ = month + "-" + date;
+  let _date = month + "-" + date;
   postData(
     "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/" +
-      date_ +
+      _date +
       ".json",
     data
   ).then((result) => {
     alert("등록 완료!");
-    initialize(date_);
+    initialize(_date);
   });
 };
 
@@ -115,7 +114,14 @@ filterBtn.onclick = function () {
   } else if (filter.textContent == "추천순") {
     filter.textContent = "최신순";
   }
-  requestList();
+  let [month, date] = getDate();
+  let _date = month  + '-' + date;
+
+  // 삼행시 리스트 초기화
+  articleTable = {};
+  rank=1;
+  document.querySelector(".total-continer-body").textContent = "";
+  requestList(_date);
 };
 
 let counter = 0;
@@ -126,8 +132,8 @@ function clickLike(event)
   let guid = parentNode.getAttribute("guid")
   let lke = parseInt(parentNode.getAttribute("like")) + 1
   let [month, date] = getDate(); 
-  let date_ = month+"-"+date
-  let url = "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/"+date_+"/"+guid+".json"
+  let _date = month+"-"+date
+  let url = "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/"+_date+"/"+guid+".json"
   data = {
     like : lke
   }
@@ -186,16 +192,16 @@ function initialize(_date)
 
   // 삼행시 리스트 request
   rank = 1;
-  getSamhangsi(date_)
+  getSamhangsi(_date)
 }
 
-function requestList(date_) {
+function requestList(_date) {
   let option;
   if (filter.textContent == "최신순") option = "timestamp";
   else option = "like";
   request(
     "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/" +
-      date_ +
+      _date +
       ".json" +
       sortOption(option)
   ).then((result) => {
@@ -249,9 +255,9 @@ function getDate() {
   return [month, date];
 }
 
-function getSamhangsi(date_)
+function getSamhangsi(_date)
 {
-  request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/samhangsi/'+date_+'.json')
+  request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/samhangsi/'+_date+'.json')
   .then(
     (result)=> {
       if(result!== null)
@@ -259,7 +265,7 @@ function getSamhangsi(date_)
         todaySamhangsi = result;
 
         let [month, date] = getDate(); 
-        if(date_ == (month+"-"+date))
+        if(_date == (month+"-"+date))
         {
           document.querySelector('.input-group-left-column1').innerHTML = result[0];
           document.querySelector('.input-group-left-column2').innerHTML = result[1];
@@ -267,7 +273,7 @@ function getSamhangsi(date_)
         }
         // 삼행시 리스트 request
         rank = 1;
-        requestList(date_);
+        requestList(_date);
       }
     }
   );
