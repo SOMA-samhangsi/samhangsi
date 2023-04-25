@@ -7,7 +7,7 @@ const lastdayCon = document.getElementById('lastday_winner_container');
 const clickCount = document.querySelector('#click-count');
 const filterBtn = document.querySelector(".filter-btn");
 const filter = document.querySelector("#filter");
-
+const popupImage = document.querySelector('.popupImage');
 
 let articleTable = {};
 let todaySamhangsi = "소마인"
@@ -111,7 +111,8 @@ submitBtn.onclick = function () {
 
 //팝업 켜기
 popupBtn.onclick = function () {
-  modal.style.display = "block";
+  popupImage.src = 'images/00' + (Math.floor(Math.random()*3) + 1) + '.png';
+  modal.style.display = 'block';
 };
 
 //팝업 끄기
@@ -135,8 +136,7 @@ filterBtn.onclick = function () {
 let counter = 0;
 
 
-function clickLike(guid = "0", data)
-{
+function clickLike(event){
   let parentNode = this.parentNode.parentNode.parentNode;
   let guid = parentNode.getAttribute("guid")
   let lke = parseInt(parentNode.getAttribute("like")) + 1
