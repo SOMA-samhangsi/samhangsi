@@ -1,34 +1,38 @@
-const submitBtn = document.getElementById('submitBtn');
-const popupBtn = document.getElementById('popupBtn');
-const modal = document.getElementById('modalWrap');
-const closeBtn = document.getElementById('closeBtn');
-const todayCon = document.getElementById('today_container');
-const lastdayCon = document.getElementById('lastday_winner_container');
-const clickCount = document.querySelector('#click-count');
+const submitBtn = document.getElementById("submitBtn");
+const popupBtn = document.getElementById("popupBtn");
+const modal = document.getElementById("modalWrap");
+const closeBtn = document.getElementById("closeBtn");
+const todayCon = document.getElementById("today_container");
+const lastdayCon = document.getElementById("lastday_winner_container");
+const clickCount = document.querySelector("#click-count");
+const filterBtn = document.querySelector(".filter-btn");
+const filter = document.querySelector("#filter");
 
 let articleTable = {};
 let todaySamhangsi = "소마인"
-let t = Date.now()
-window.onscroll = function(e) {
-  let [month, date] = getDate(); 
-  let date_ = month+"-"+date;
-  let now =  Math.floor((Date.now() - t)/1000);
-  if(now > 3 && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-      requestList(date_);   
-      t = Date.now();     
+let t = Date.now();
+window.onscroll = function (e) {
+  let now = Math.floor((Date.now() - t) / 1000);
+  if (
+    now > 3 &&
+    window.innerHeight + window.scrollY >= document.body.offsetHeight
+  ) {
+    requestList();
+    t = Date.now();
   }
 };
 
 window.onload = function () {
-  modal.style.display = 'none'; //팝업 끄기
+  modal.style.display = "none"; //팝업 끄기
   //if (날짜가 오늘 날짜이면)
-  todayCon.style.display = 'block';
-  lastdayCon.style.display = 'none';
+  todayCon.style.display = "block";
+  lastdayCon.style.display = "none";
+  filter.textContent = "최신순";
+  let [month, date] = getDate();
 
-  let [month, date] = getDate(); 
   let _date = month  + '-' + date;
 
-  divDate = document.getElementById('Date');
+  divDate = document.getElementById("Date");
   divDate.textContent = month+"월 "+date+"일";
   //else
   //todayCon.style.display = "none";
@@ -37,10 +41,9 @@ window.onload = function () {
   initialize(_date);
 };
 
-async function request(url = '') {
-  const response = await fetch(url,
-  {
-    method: 'GET',
+async function request(url = "") {
+  const response = await fetch(url, {
+    method: "GET",
   });
   return await response.json();
 }
@@ -56,57 +59,63 @@ async function patchData(url = '', data) {
 
 async function postData(url = '', data = {}) {
   const response = await fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE 등
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, *same-origin, omit
+    method: "POST", // *GET, POST, PUT, DELETE 등
+    mode: "cors", // no-cors, *cors, same-origin
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "same-origin", // include, *same-origin, omit
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    redirect: "follow", // manual, *follow, error
+    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: JSON.stringify(data), // body의 데이터 유형은 반드시 "Content-Type" 헤더와 일치해야 함
   });
   return response.json(); // JSON 응답을 네이티브 JavaScript 객체로 파싱
 }
 
-
 submitBtn.onclick = function () {
   //DB 연동 후 데이터 들어가도록 변경
 
   const data = {
-    like : 0,
-    name : document.getElementById('name').value,
-    number : document.getElementById('number').value,
-    text1 : document.getElementById('text1').value,
-    text2 : document.getElementById('text2').value,
-    text3 : document.getElementById('text3').value,
-    timestamp : Date.now()
-  }
+    like: 0,
+    name: document.getElementById("name").value,
+    number: document.getElementById("number").value,
+    text1: document.getElementById("text1").value,
+    text2: document.getElementById("text2").value,
+    text3: document.getElementById("text3").value,
+    timestamp: Date.now(),
+  };
 
-  let [month, date] = getDate(); 
-  let date_ = month+"-"+date
-  postData("https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/"+ date_ +".json", data)
-  .then(
-    (result)=> {
-      alert('등록 완료!');
-      articleTable={}
-      initialize(date_);
-    }
-  );
-
-
+  let [month, date] = getDate();
+  let date_ = month + "-" + date;
+  postData(
+    "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/" +
+      date_ +
+      ".json",
+    data
+  ).then((result) => {
+    alert("등록 완료!");
+    initialize(date_);
+  });
 };
 
 //팝업 켜기
 popupBtn.onclick = function () {
-  modal.style.display = 'block';
- 
+  modal.style.display = "block";
 };
 
 //팝업 끄기
 closeBtn.onclick = function () {
-  modal.style.display = 'none';
+  modal.style.display = "none";
+};
+
+filterBtn.onclick = function () {
+  if (filter.textContent == "최신순") {
+    filter.textContent = "추천순";
+  } else if (filter.textContent == "추천순") {
+    filter.textContent = "최신순";
+  }
+  requestList();
 };
 
 let counter = 0;
@@ -129,24 +138,25 @@ function clickLike(event)
     }
   );
 }
+function samArticle(guid = "0", data) {
+  if (
+    "content" in document.createElement("template") &&
+    articleTable[guid] === undefined
+  ) {
+    let name = "name";
 
-function samArticle(guid = "0", data)
-{
-  if ('content' in document.createElement('template') && articleTable[guid] === undefined) {
-    let name ="name";
+    let articleTemplate = document.querySelector("#articleTemplate");
+    let clone = articleTemplate.content.cloneNode(true);
+    // let tempDiv=clone.querySelectorAll('div');
 
-    let articleTemplate=document.querySelector('#articleTemplate');
-    let clone=articleTemplate.content.cloneNode(true);
-   // let tempDiv=clone.querySelectorAll('div');
-
-    const heartIcon = clone.querySelector('.myButton');
+    const heartIcon = clone.querySelector(".myButton");
     heartIcon.addEventListener('click', clickLike);
 
-    clone.querySelector('.rank').innerHTML = rank;
-    clone.querySelector('.contents-name').innerHTML = data.name;
-    clone.querySelector('.contents-main-right1').innerHTML = data.text1;
-    clone.querySelector('.contents-main-right2').innerHTML = data.text2;
-    clone.querySelector('.contents-main-right3').innerHTML = data.text3;
+    clone.querySelector(".rank").innerHTML = rank;
+    clone.querySelector(".contents-name").innerHTML = data.name;
+    clone.querySelector(".contents-main-right1").innerHTML = data.text1;
+    clone.querySelector(".contents-main-right2").innerHTML = data.text2;
+    clone.querySelector(".contents-main-right3").innerHTML = data.text3;
 
     clone.querySelector('.contents-main-left1').innerHTML = todaySamhangsi[0];
     clone.querySelector('.contents-main-left2').innerHTML = todaySamhangsi[1];
@@ -156,90 +166,86 @@ function samArticle(guid = "0", data)
     parent.appendChild(clone);
 
     child = parent.lastElementChild;
-    child.setAttribute("guid", guid)
-    child.setAttribute("timestamp", data.timestamp)
-    child.setAttribute("like", data.like)
+    child.setAttribute("guid", guid);
+    child.setAttribute("timestamp", data.timestamp);
+    child.setAttribute("like", data.like);
 
     articleTable[guid] = data;
     rank++;
-    }
+  }
 }
 
 let rank = 1;
 function initialize(_date)
 {
   // 삼행시 리스트 초기화
-  document.querySelector('.total-continer-body').textContent = '';
+  document.querySelector(".total-continer-body").textContent = "";
 
   // 입력 폼 초기화
-  document.getElementById('inputForm').reset();
+  document.getElementById("inputForm").reset();
 
-  getSamhangsi(_date)
+  // 삼행시 리스트 request
+  rank = 1;
+  getSamhangsi(date_)
 }
 
-function requestList(date_)
-{
-  request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/'+date_+'.json'+sortOption("timestamp"))
-  .then(
-    (result)=> {
-      if(result!== null)
-      {
-        const sortedObj = sortData(result, "timestamp")
-        for (const key in sortedObj) {
-          if (sortedObj.hasOwnProperty(key)) {
-            samArticle(key, sortedObj[key]);
-          }
-        }
+function requestList(date_) {
+  let option;
+  if (filter.textContent == "최신순") option = "timestamp";
+  else option = "like";
+  request(
+    "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/" +
+      date_ +
+      ".json" +
+      sortOption(option)
+  ).then((result) => {
+    const sortedObj = sortData(result, option);
+    for (const key in sortedObj) {
+      if (sortedObj.hasOwnProperty(key)) {
+        samArticle(key, sortedObj[key]);
       }
     }
-  );
+  });
 }
 
-function sortOption(option)
-{
-  return '?orderBy="'+ option+ '"&limitToLast=10'+ At(option);
+function sortOption(option) {
+  return '?orderBy="' + option + '"&limitToLast=10' + At(option);
 }
 
-function sortData(data, option)
-{
-  if(option == "timestamp")
-  {
+function sortData(data, option) {
+  if (option === "timestamp") {
     const sortedObj = Object.fromEntries(
-      Object.entries(data).sort(([,a], [,b]) => a.timestamp < b.timestamp ? 1 : -1)
+      Object.entries(data).sort(([, a], [, b]) =>
+        a.timestamp < b.timestamp ? 1 : -1
+      )
     );
-
     return sortedObj;
   }
 
-  if(option == "like")
-  {
+  if (option === "like") {
     const sortedObj = Object.fromEntries(
-      Object.entries(data).sort(([,a], [,b]) => a.like < b.like ? 1 : -1)
+      Object.entries(data).sort(([, a], [, b]) => (a.like < b.like ? 1 : -1))
     );
-
     return sortedObj;
   }
 }
 
-function At(option)
-{
-  let parent=document.querySelector('.total-continer-body');
+function At(option) {
+  let parent = document.querySelector(".total-continer-body");
   let lastChild = parent.lastElementChild;
 
-  if(lastChild === null)
-    return '&startAt=0'
+  if (lastChild === null) return "&startAt=0";
 
-  if(option == "like" && lastChild.getAttribute("like") !== 0)
-    return '&endAt='+lastChild.getAttribute("like")
-  if(option == "timestamp")
-    return '&endAt='+lastChild.getAttribute("timestamp")
+  if (option == "like" && lastChild.getAttribute("like") !== 0)
+    return "&endAt=" + lastChild.getAttribute("like");
+  if (option == "timestamp")
+    return "&endAt=" + lastChild.getAttribute("timestamp");
 }
 
-function getDate()
-{
-  let today = new Date();   
-  let month = today.getMonth() + 1; 
-  let date = today.getDate(); 
+function getDate() {
+  let today = new Date();
+  let month = today.getMonth() + 1;
+  let date = today.getDate();
   return [month, date];
 }
 
