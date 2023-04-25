@@ -5,13 +5,16 @@ const closeBtn = document.getElementById('closeBtn');
 const todayCon = document.getElementById('today_container');
 const lastdayCon = document.getElementById('lastday_winner_container');
 const clickCount = document.querySelector('#click-count');
-const articleTable = {};
 
+let articleTable = {};
+let todaySamhangsi = "소마인"
 let t = Date.now()
 window.onscroll = function(e) {
+  let [month, date] = getDate(); 
+  let date_ = month+"-"+date;
   let now =  Math.floor((Date.now() - t)/1000);
   if(now > 3 && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-      requestList();   
+      requestList(date_);   
       t = Date.now();     
   }
 };
@@ -23,6 +26,7 @@ window.onload = function () {
   lastdayCon.style.display = 'none';
 
   let [month, date] = getDate(); 
+  let _date = month  + '-' + date;
 
   divDate = document.getElementById('Date');
   divDate.textContent = month+"월 "+date+"일";
@@ -30,15 +34,22 @@ window.onload = function () {
   //todayCon.style.display = "none";
   //lastdayCon.style.display = "block";
 
-  initialize();
-
-
+  initialize(_date);
 };
 
 async function request(url = '') {
   const response = await fetch(url,
   {
     method: 'GET',
+  });
+  return await response.json();
+}
+
+async function patchData(url = '', data) {
+  const response = await fetch(url,
+  {
+    method: 'PATCH',
+    body: JSON.stringify(data)
   });
   return await response.json();
 }
@@ -79,9 +90,12 @@ submitBtn.onclick = function () {
   .then(
     (result)=> {
       alert('등록 완료!');
-      initialize();
+      articleTable={}
+      initialize(date_);
     }
   );
+
+
 };
 
 //팝업 켜기
@@ -97,6 +111,26 @@ closeBtn.onclick = function () {
 
 let counter = 0;
 
+function clickLike(event)
+{
+  let parentNode = this.parentNode.parentNode.parentNode;
+  let guid = parentNode.getAttribute("guid")
+  let lke = parseInt(parentNode.getAttribute("like")) + 1
+  let [month, date] = getDate(); 
+  let date_ = month+"-"+date
+  let url = "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/"+date_+"/"+guid+".json"
+  data = {
+    like : lke
+  }
+  patchData(url, data)
+  .then(
+    (result)=> {
+      parentNode.setAttribute("like", lke)
+      parentNode.querySelector('.like-count').innerHTML = data.like;
+    
+    }
+  );
+}
 
 function samArticle(guid = "0", data)
 {
@@ -108,17 +142,18 @@ function samArticle(guid = "0", data)
    // let tempDiv=clone.querySelectorAll('div');
 
     const heartIcon = clone.querySelector('.myButton');
-    heartIcon.addEventListener('click', () => {
-      //DB 연동 후 게시글별 하트 수 올라가도록 변경
-      counter++;
-      clickCount.textContent = counter;
-    });
+    heartIcon.addEventListener('click', clickLike);
 
+    clone.querySelector('.like-count').innerHTML = data.like;
     clone.querySelector('.rank').innerHTML = rank;
     clone.querySelector('.contents-name').innerHTML = data.name;
     clone.querySelector('.contents-main-right1').innerHTML = data.text1;
     clone.querySelector('.contents-main-right2').innerHTML = data.text2;
     clone.querySelector('.contents-main-right3').innerHTML = data.text3;
+
+    clone.querySelector('.contents-main-left1').innerHTML = todaySamhangsi[0];
+    clone.querySelector('.contents-main-left2').innerHTML = todaySamhangsi[1];
+    clone.querySelector('.contents-main-left3').innerHTML = todaySamhangsi[2];
 
     let parent=document.querySelector('.total-continer-body');
     parent.appendChild(clone);
@@ -134,7 +169,7 @@ function samArticle(guid = "0", data)
 }
 
 let rank = 1;
-function initialize()
+function initialize(_date)
 {
   // 삼행시 리스트 초기화
   document.querySelector('.total-continer-body').textContent = '';
@@ -142,24 +177,21 @@ function initialize()
   // 입력 폼 초기화
   document.getElementById('inputForm').reset();
 
-
-  // 삼행시 리스트 request
-  rank = 1;
-  requestList();
+  getSamhangsi(_date)
 }
 
-function requestList()
+function requestList(date_)
 {
-  let [month, date] = getDate(); 
-  let date_ = month+"-"+date;
   request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/'+date_+'.json'+sortOption("timestamp"))
   .then(
     (result)=> {
-    const sortedObj = sortData(result, "timestamp")
-
-      for (const key in sortedObj) {
-        if (sortedObj.hasOwnProperty(key)) {
-          samArticle(key, sortedObj[key]);
+      if(result!== null)
+      {
+        const sortedObj = sortData(result, "timestamp")
+        for (const key in sortedObj) {
+          if (sortedObj.hasOwnProperty(key)) {
+            samArticle(key, sortedObj[key]);
+          }
         }
       }
     }
@@ -168,7 +200,7 @@ function requestList()
 
 function sortOption(option)
 {
-  return '?orderBy="'+ option+ '"&limitToLast=5'+ At(option);
+  return '?orderBy="'+ option+ '"&limitToLast=10'+ At(option);
 }
 
 function sortData(data, option)
@@ -212,4 +244,28 @@ function getDate()
   let month = today.getMonth() + 1; 
   let date = today.getDate(); 
   return [month, date];
+}
+
+function getSamhangsi(date_)
+{
+  request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/samhangsi/'+date_+'.json')
+  .then(
+    (result)=> {
+      if(result!== null)
+      {
+        todaySamhangsi = result;
+
+        let [month, date] = getDate(); 
+        if(date_ == (month+"-"+date))
+        {
+          document.querySelector('.input-group-left-column1').innerHTML = result[0];
+          document.querySelector('.input-group-left-column2').innerHTML = result[1];
+          document.querySelector('.input-group-left-column3').innerHTML = result[2];
+        }
+        // 삼행시 리스트 request
+        rank = 1;
+        requestList(date_);
+      }
+    }
+  );
 }
