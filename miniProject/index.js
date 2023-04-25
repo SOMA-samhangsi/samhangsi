@@ -9,10 +9,10 @@ const lastdayCon = document.getElementById('lastday_winner_container');
 const clickCount = document.querySelector('#click-count');
 
 let articleTable = {};
+let samhangsiDateTable = [];
 let todaySamhangsi = "소마인"
-let lastDaySamhangsi;
-
 let t = Date.now()
+
 window.onscroll = function(e) {
   let [month, date] = getDate(); 
   let date_ = month+"-"+date;
@@ -39,6 +39,7 @@ window.onload = function () {
   //lastdayCon.style.display = "block";
 
   initialize(_date);
+  getSamhangsiDate();
 };
 
 async function request(url = '') {
@@ -74,43 +75,22 @@ async function postData(url = '', data = {}) {
   return response.json(); // JSON 응답을 네이티브 JavaScript 객체로 파싱
 }
 
-// 오늘 날짜인지 체크
-function checkToday(month, date){
-  let [todayMonth, todayDate] = getDate();
-  
-  if (month == todayMonth && date == todayDate){
-    todayCon.style.display = 'block';
-    lastdayCon.style.display = 'none';
-  } else {
-    todayCon.style.display = 'none';
-    lastdayCon.style.display = 'block';
-  }
-}
-
-// 미래 날짜 체크
-function checkFutureDay(month, date) {
-  let [todayMonth, todayDate] = getDate();
-
-  if (month == todayMonth && date > todayDate){
-    return true;
-  }
-  return false;
-}
-
 beforeDateBtn.onclick = function () {
-  // 해당 날짜의 삼행시가 존재하는지 체크
-
   const divDate = document.getElementById('Date');
   const divDateText = divDate.innerText;
   const dateList = divDateText.split(" ");
   const regex = /[^0-9]/g;
   let month = parseInt(dateList[0].replace(regex, ""));
   let date = parseInt(dateList[1].replace(regex, "")) - 1;
-  divDate.innerText = month + "월 " + date + "일";
 
-  checkToday(month, date);
   let _date = month  + '-' + date;
-  getBestSamhangsi(_date);
+  if(!samhangsiDateTable.includes(_date)){
+    alert("잘못된 날짜 접근입니다.");
+  } else {
+    checkToday(month, date);
+    getSamhangsi(_date);
+    divDate.innerText = month + "월 " + date + "일";
+  }
 }
 
 afterDateBtn.onclick = function () {
@@ -120,14 +100,18 @@ afterDateBtn.onclick = function () {
   const regex = /[^0-9]/g;
   let month = parseInt(dateList[0].replace(regex, ""));
   let date = parseInt(dateList[1].replace(regex, "")) + 1;
+  let _date = month  + '-' + date;
 
   if (checkFutureDay(month, date)){
     alert('내일의 삼행시는 비밀!');
+  } 
+  
+  else if (!samhangsiDateTable.includes(_date)){
+    alert("잘못된 날짜 접근입니다.");
   } else {
     checkToday(month, date);
+    getSamhangsi(_date);
     divDate.innerText = month + "월 " + date + "일";
-    let _date = month  + '-' + date;
-    getBestSamhangsi(_date);
   }
 }
 
@@ -154,8 +138,6 @@ submitBtn.onclick = function () {
       initialize(date_);
     }
   );
-
-
 };
 
 //팝업 켜기
@@ -170,6 +152,30 @@ closeBtn.onclick = function () {
 };
 
 let counter = 0;
+
+// 오늘 날짜인지 체크
+function checkToday(month, date){
+  let [todayMonth, todayDate] = getDate();
+  
+  if (month == todayMonth && date == todayDate){
+    todayCon.style.display = 'block';
+    lastdayCon.style.display = 'none';
+  } else {
+    todayCon.style.display = 'none';
+    lastdayCon.style.display = 'block';
+  }
+}
+
+// 미래 날짜 체크
+function checkFutureDay(month, date) {
+  let [todayMonth, todayDate] = getDate();
+
+  if (month == todayMonth && date > todayDate){
+    return true;
+  }
+  return false;
+}
+
 
 function clickLike(event)
 {
@@ -305,11 +311,9 @@ function getDate()
 
 function showBestSamhangsi(data)
 {
-  console.log(lastDaySamhangsi[0] + lastDaySamhangsi[1] + lastDaySamhangsi[2]);
-  console.log(data.text1 + " " + data.text2 + " " + data.text3);
-  lastdayCon.querySelector('.lastday_winner_item_circle1').innerText = lastDaySamhangsi[0]; 
-  lastdayCon.querySelector('.lastday_winner_item_circle2').innerText = lastDaySamhangsi[1]; 
-  lastdayCon.querySelector('.lastday_winner_item_circle3').innerText = lastDaySamhangsi[2]; 
+  lastdayCon.querySelector('.lastday_winner_item_circle1').innerText = todaySamhangsi[0]; 
+  lastdayCon.querySelector('.lastday_winner_item_circle2').innerText = todaySamhangsi[1]; 
+  lastdayCon.querySelector('.lastday_winner_item_circle3').innerText = todaySamhangsi[2]; 
 
   lastdayCon.querySelector('.lastday_winner_item_content1').innerHTML = data.text1;
   lastdayCon.querySelector('.lastday_winner_item_content2').innerHTML = data.text2;
@@ -335,29 +339,14 @@ function requestBestSamhangsi(date_)
   )
 }
 
-function getBestSamhangsi(date_)
-{
-  request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/samhangsi/'+date_+'.json')
-  .then (
-    (result)=> {
-      if (result != null){
-        lastDaySamhangsi = result;
-        requestBestSamhangsi(date_);
-      }
-    }
-  )
-}
-
-
 function getSamhangsi(date_)
 {
   request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/samhangsi/'+date_+'.json')
   .then(
     (result)=> {
-      if(result!== null)
-      {
+      if (result != null){
         todaySamhangsi = result;
-
+  
         let [month, date] = getDate(); 
         if(date_ == (month+"-"+date))
         {
@@ -368,7 +357,23 @@ function getSamhangsi(date_)
         // 삼행시 리스트 request
         rank = 1;
         requestList(date_);
-      }
+        requestBestSamhangsi(date_);
+      } 
     }
   );
 }
+
+function getSamhangsiDate() 
+  {
+    request('https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/samhangsi.json')
+    .then(
+      (result)=> {
+        if (result != null){
+          let idx = 0;
+          for (const key in result){
+            samhangsiDateTable[idx++] = key.toString();
+          }
+        }
+      }
+    )
+  }
