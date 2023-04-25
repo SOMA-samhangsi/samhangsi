@@ -139,6 +139,8 @@ submitBtn.onclick = function () {
     document.getElementById("text3").value == ""
   ) {
     alert("잘못된 텍스트입니다.");
+  } else if (document.getElementById("name").value == "") {
+    alert("닉네임을 입력해 주세요.");
   } else {
     const data = {
       like: 0,
