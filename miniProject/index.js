@@ -1,16 +1,17 @@
-const submitBtn = document.getElementById("submitBtn");
-const popupBtn = document.getElementById("popupBtn");
-const modal = document.getElementById("modalWrap");
-const closeBtn = document.getElementById("closeBtn");
-const todayCon = document.getElementById("today_container");
-const lastdayCon = document.getElementById("lastday_winner_container");
-const clickCount = document.querySelector("#click-count");
+const submitBtn = document.getElementById('submitBtn');
+const popupBtn = document.getElementById('popupBtn');
+const modal = document.getElementById('modalWrap');
+const closeBtn = document.getElementById('closeBtn');
+const todayCon = document.getElementById('today_container');
+const lastdayCon = document.getElementById('lastday_winner_container');
+const clickCount = document.querySelector('#click-count');
 const filterBtn = document.querySelector(".filter-btn");
 const filter = document.querySelector("#filter");
 
+
 let articleTable = {};
 let todaySamhangsi = "소마인"
-let t = Date.now();
+let t = Date.now()
 window.onscroll = function (e) {
   let [month, date] = getDate();
   let _date = month  + '-' + date;
@@ -27,10 +28,10 @@ window.onscroll = function (e) {
 window.onload = function () {
   modal.style.display = "none"; //팝업 끄기
   //if (날짜가 오늘 날짜이면)
-  todayCon.style.display = "block";
-  lastdayCon.style.display = "none";
+  todayCon.style.display = 'block';
+  lastdayCon.style.display = 'none';
   filter.textContent = "최신순";
-  let [month, date] = getDate();
+  let [month, date] = getDate(); 
   let _date = month  + '-' + date;
 
   divDate = document.getElementById("Date");
@@ -45,6 +46,15 @@ window.onload = function () {
 async function request(url = "") {
   const response = await fetch(url, {
     method: "GET",
+  });
+  return await response.json();
+}
+
+async function patchData(url = '', data) {
+  const response = await fetch(url,
+  {
+    method: 'PATCH',
+    body: JSON.stringify(data)
   });
   return await response.json();
 }
@@ -87,17 +97,16 @@ submitBtn.onclick = function () {
     timestamp: Date.now(),
   };
 
-  let [month, date] = getDate();
-  let _date = month + "-" + date;
-  postData(
-    "https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/" +
-      _date +
-      ".json",
-    data
-  ).then((result) => {
-    alert("등록 완료!");
-    initialize(_date);
-  });
+  let [month, date] = getDate(); 
+  let _date = month+"-"+date
+  postData("https://swm14samhangsi-default-rtdb.asia-southeast1.firebasedatabase.app/messages/"+ 
+  _date +".json", data)
+  .then(
+    (result)=> {
+      alert('등록 완료!');
+      initialize(_data);
+    }
+  );
 };
 
 //팝업 켜기
@@ -125,7 +134,8 @@ filterBtn.onclick = function () {
 
 let counter = 0;
 
-function clickLike(event)
+
+function clickLike(guid = "0", data)
 {
   let parentNode = this.parentNode.parentNode.parentNode;
   let guid = parentNode.getAttribute("guid")
@@ -154,18 +164,15 @@ function samArticle(guid = "0", data) {
     let clone = articleTemplate.content.cloneNode(true);
     // let tempDiv=clone.querySelectorAll('div');
 
-    const heartIcon = clone.querySelector(".myButton");
+    const heartIcon = clone.querySelector('.myButton');
     heartIcon.addEventListener('click', clickLike);
 
-    clone.querySelector(".rank").innerHTML = rank;
-    clone.querySelector(".contents-name").innerHTML = data.name;
-    clone.querySelector(".contents-main-right1").innerHTML = data.text1;
-    clone.querySelector(".contents-main-right2").innerHTML = data.text2;
-    clone.querySelector(".contents-main-right3").innerHTML = data.text3;
-
-    clone.querySelector('.contents-main-left1').innerHTML = todaySamhangsi[0];
-    clone.querySelector('.contents-main-left2').innerHTML = todaySamhangsi[1];
-    clone.querySelector('.contents-main-left3').innerHTML = todaySamhangsi[2];
+    clone.querySelector('.like-count').innerHTML = data.like;
+    clone.querySelector('.rank').innerHTML = rank;
+    clone.querySelector('.contents-name').innerHTML = data.name;
+    clone.querySelector('.contents-main-right1').innerHTML = data.text1;
+    clone.querySelector('.contents-main-right2').innerHTML = data.text2;
+    clone.querySelector('.contents-main-right3').innerHTML = data.text3;
 
     let parent=document.querySelector('.total-continer-body');
     parent.appendChild(clone);
@@ -198,7 +205,9 @@ function initList(_date){
     requestList(_date);
 }
 
-function requestList(_date) {
+
+function requestList(_date)
+{
   let option;
   if (filter.textContent == "최신순") option = "timestamp";
   else option = "like";
@@ -210,18 +219,20 @@ function requestList(_date) {
   ).then((result) => {
     if(result !== null)
     {
-      const sortedObj = sortData(result, option);
+    const sortedObj = sortData(result, option)
+
       for (const key in sortedObj) {
         if (sortedObj.hasOwnProperty(key)) {
           samArticle(key, sortedObj[key]);
         }
       }
     }
-  });
+ });
 }
 
-function sortOption(option) {
-  return '?orderBy="' + option + '"&limitToLast=10' + At(option);
+function sortOption(option)
+{
+  return '?orderBy="'+ option+ '"&limitToLast=10'+ At(option);
 }
 
 function sortData(data, option) {
