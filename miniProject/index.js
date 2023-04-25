@@ -127,19 +127,7 @@ afterDateBtn.onclick = function () {
 
 submitBtn.onclick = function () {
   //DB 연동 후 데이터 들어가도록 변경
-  if (
-    document.getElementById("text1").value[0] !=
-      document.querySelector(".input-group-left-column1").innerHTML ||
-    document.getElementById("text2").value[0] !=
-      document.querySelector(".input-group-left-column2").innerHTML ||
-    document.getElementById("text3").value[0] !=
-      document.querySelector(".input-group-left-column3").innerHTML ||
-    document.getElementById("text1").value == "" ||
-    document.getElementById("text2").value == "" ||
-    document.getElementById("text3").value == ""
-  ) {
-    alert("잘못된 텍스트입니다.");
-  } else {
+
     const data = {
       like: 0,
       name: document.getElementById("name").value,
@@ -230,7 +218,6 @@ function clickLike(event) {
   };
   patchData(url, data).then((result) => {
     parentNode.setAttribute("like", lke);
-    parentNode.querySelector(".like-count").innerHTML = lke;
   });
 }
 function samArticle(guid = "0", data) {
