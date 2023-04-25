@@ -117,11 +117,8 @@ filterBtn.onclick = function () {
   let [month, date] = getDate();
   let _date = month  + '-' + date;
 
-  // 삼행시 리스트 초기화
-  articleTable = {};
-  rank=1;
-  document.querySelector(".total-continer-body").textContent = "";
-  requestList(_date);
+  // 삼행시 리스트 request
+  initList(_date)
 };
 
 let counter = 0;
@@ -184,15 +181,19 @@ function samArticle(guid = "0", data) {
 let rank = 1;
 function initialize(_date)
 {
-  // 삼행시 리스트 초기화
-  document.querySelector(".total-continer-body").textContent = "";
-
   // 입력 폼 초기화
   document.getElementById("inputForm").reset();
 
-  // 삼행시 리스트 request
-  rank = 1;
+  // 삼행시 주제 request
   getSamhangsi(_date)
+}
+
+function initList(_date){
+    // 삼행시 리스트 초기화
+    articleTable = {};
+    rank=1;
+    document.querySelector(".total-continer-body").textContent = "";
+    requestList(_date);
 }
 
 function requestList(_date) {
@@ -272,8 +273,7 @@ function getSamhangsi(_date)
           document.querySelector('.input-group-left-column3').innerHTML = result[2];
         }
         // 삼행시 리스트 request
-        rank = 1;
-        requestList(_date);
+        initList(_date)
       }
     }
   );
