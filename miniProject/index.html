@@ -1,54 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link rel="stylesheet" type="text/css" href="css/header.css" />
-    <link rel="stylesheet" type="text/css" href="css/today.css" />
-    <link rel="stylesheet" type="text/css" href="css/lastday.css" />
-    <link rel="stylesheet" type="text/css" href="css/popup.css" />
-    <link rel="stylesheet" type="text/css" href="css/list.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="css/header.css" />
+  <link rel="stylesheet" type="text/css" href="css/today.css" />
+  <link rel="stylesheet" type="text/css" href="css/lastday.css" />
+  <link rel="stylesheet" type="text/css" href="css/popup.css" />
+  <link rel="stylesheet" type="text/css" href="css/list.css" />
 
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
-    ></script>
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-    ></script>
-    <script defer src="index.js"></script>
-    <title>삼행시</title>
-  </head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
 
-  <body>
-    <!-- header -->
-    <header class="Navigation">
-      <img class="Logo" src="images/logo.png" />
-      <button typ="button" id="popupBtn">
-        <img class="Popup" src="images/gift.png" />
-      </button>
-    </header>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script defer src="index.js"></script>
+  <title>삼행시</title>
+</head>
 
-    <!-- Date Header  -->
-    <div class="Container">
-      <button class="DateButton">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-      <div class="Date" id="Date">4월 15일</div>
-      <button class="DateButton">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    </div>
+<body>
+  <!-- header -->
+  <header class="Navigation">
+    <img class="Logo" src="images/logo.png" />
+    <button typ="button" id="popupBtn">
+      <img class="Popup" src="images/gift.png" />
+    </button>
+  </header>
+
+   <!-- Date Header  -->
+   <div class="Container">
+    <button class="DateButton" id="beforeDateBtn">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <div class="Date" id="Date">4월 15일</div>
+    <button class="DateButton" id="afterDateBtn">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
 
     <!-- Modal Popup -->
     <div class="modalWrap" id="modalWrap">
@@ -93,21 +86,20 @@
       </form>
     </div>
 
-    <!-- last day main container -->
     <div class="lastday_winner_container" id="lastday_winner_container">
       <div class="lastday_winner_item">
-        <div class="lastday_winner_item_circle">소</div>
-        <div class="class lastday_winner_item_content">소고기</div>
+        <div class="lastday_winner_item_circle1">소</div>
+        <div class="lastday_winner_item_content1">소고기</div>
       </div>
-
+  
       <div class="lastday_winner_item">
-        <div class="lastday_winner_item_circle">마</div>
-        <div class="class lastday_winner_item_content">마이야르는</div>
+        <div class="lastday_winner_item_circle2">마</div>
+        <div class="lastday_winner_item_content2">마이야르는</div>
       </div>
-
+  
       <div class="lastday_winner_item">
-        <div class="lastday_winner_item_circle">인</div>
-        <div class="lastday_winner_item_content">인생이다</div>
+        <div class="lastday_winner_item_circle3">인</div>
+        <div class="lastday_winner_item_content3">인생이다</div>
       </div>
     </div>
 
