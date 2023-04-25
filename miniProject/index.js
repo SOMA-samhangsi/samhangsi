@@ -2,6 +2,8 @@ const submitBtn = document.getElementById('submitBtn');
 const popupBtn = document.getElementById('popupBtn');
 const modal = document.getElementById('modalWrap');
 const closeBtn = document.getElementById('closeBtn');
+const beforeDateBtn = document.getElementById('beforeDateBtn');
+const afterDateBtn = document.getElementById('afterDateBtn');
 const todayCon = document.getElementById('today_container');
 const lastdayCon = document.getElementById('lastday_winner_container');
 const clickCount = document.querySelector('#click-count');
@@ -59,6 +61,25 @@ async function postData(url = '', data = {}) {
   return response.json(); // JSON 응답을 네이티브 JavaScript 객체로 파싱
 }
 
+beforeDateBtn.onclick = function () {
+  const divDate = document.getElementById('Date');
+  const divDateText = divDate.innerText;
+  const dateList = divDateText.split(" ");
+  const regex = /[^0-9]/g;
+  let month = parseInt(dateList[0].replace(regex, ""));
+  let date = parseInt(dateList[1].replace(regex, ""));
+  divDate.innerText = month + "월 " + (date - 1) + "일";
+}
+
+afterDateBtn.onclick = function () {
+  const divDate = document.getElementById('Date');
+  const divDateText = divDate.innerText;
+  const dateList = divDateText.split(" ");
+  const regex = /[^0-9]/g;
+  let month = parseInt(dateList[0].replace(regex, ""));
+  let date = parseInt(dateList[1].replace(regex, ""));
+  divDate.innerText = month + "월 " + (date + 1) + "일";
+}
 
 submitBtn.onclick = function () {
   //DB 연동 후 데이터 들어가도록 변경
