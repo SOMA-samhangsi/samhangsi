@@ -12,12 +12,14 @@ let articleTable = {};
 let todaySamhangsi = "소마인"
 let t = Date.now();
 window.onscroll = function (e) {
+  let [month, date] = getDate();
+  let _date = month  + '-' + date;
   let now = Math.floor((Date.now() - t) / 1000);
   if (
     now > 3 &&
     window.innerHeight + window.scrollY >= document.body.offsetHeight
   ) {
-    requestList();
+    requestList(_date);
     t = Date.now();
   }
 };
@@ -206,10 +208,13 @@ function requestList(_date) {
       ".json" +
       sortOption(option)
   ).then((result) => {
-    const sortedObj = sortData(result, option);
-    for (const key in sortedObj) {
-      if (sortedObj.hasOwnProperty(key)) {
-        samArticle(key, sortedObj[key]);
+    if(result !== null)
+    {
+      const sortedObj = sortData(result, option);
+      for (const key in sortedObj) {
+        if (sortedObj.hasOwnProperty(key)) {
+          samArticle(key, sortedObj[key]);
+        }
       }
     }
   });
