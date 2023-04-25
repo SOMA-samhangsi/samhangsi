@@ -40,6 +40,11 @@
 .contents-header{
   margin-bottom: 10px;
 }
+
+.like-count{
+  float: right;  
+}
+
 .fa-heart{
   margin-right: 5px;
 }
