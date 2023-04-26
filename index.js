@@ -16,7 +16,12 @@ let todaySamhangsi = "소마인";
 let t = Date.now();
 
 window.onscroll = function (e) {
-  let [month, date] = getDate();
+  const divDate = document.getElementById("Date");
+  const divDateText = divDate.innerText;
+  const dateList = divDateText.split(" ");
+  const regex = /[^0-9]/g;
+  let month = parseInt(dateList[0].replace(regex, ""));
+  let date = parseInt(dateList[1].replace(regex, ""));
   let _date = month + "-" + date;
   let now = Math.floor((Date.now() - t) / 1000);
   if (
@@ -182,7 +187,12 @@ filterBtn.onclick = function () {
   } else if (filter.textContent == "추천순") {
     filter.textContent = "최신순";
   }
-  let [month, date] = getDate();
+  const divDate = document.getElementById("Date");
+  const divDateText = divDate.innerText;
+  const dateList = divDateText.split(" ");
+  const regex = /[^0-9]/g;
+  let month = parseInt(dateList[0].replace(regex, ""));
+  let date = parseInt(dateList[1].replace(regex, ""));
   let _date = month + "-" + date;
 
   // 삼행시 리스트 request
