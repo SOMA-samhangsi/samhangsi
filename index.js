@@ -6,7 +6,6 @@ const beforeDateBtn = document.getElementById("beforeDateBtn");
 const afterDateBtn = document.getElementById("afterDateBtn");
 const todayCon = document.getElementById("today_container");
 const lastdayCon = document.getElementById("lastday_winner_container");
-const clickCount = document.querySelector("#click-count");
 const filterBtn = document.querySelector(".filter-btn");
 const filter = document.querySelector("#filter");
 const popupImage = document.querySelector(".popupImage");
@@ -189,8 +188,6 @@ filterBtn.onclick = function () {
   // 삼행시 리스트 request
   initList(_date);
 };
-
-let counter = 0;
 
 // 오늘 날짜인지 체크
 function checkToday(month, date) {

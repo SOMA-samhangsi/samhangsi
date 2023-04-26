@@ -89,4 +89,10 @@
   .total-container-header-title{
     font-size: 17px;
   }
+  .contents-main{
+    font-size: 14px; 
+  }
+  .filter-btn{
+    font-size: 13px;
+  }
 }
