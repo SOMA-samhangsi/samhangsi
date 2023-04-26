@@ -246,6 +246,9 @@ function samArticle(guid = "0", data) {
     const heartIcon = clone.querySelector(".myButton");
     heartIcon.addEventListener("click", clickLike);
 
+    clone.querySelector(".contents-main-left1").innerHTML = todaySamhangsi[0];
+    clone.querySelector(".contents-main-left2").innerHTML = todaySamhangsi[1];
+    clone.querySelector(".contents-main-left3").innerHTML = todaySamhangsi[2];
     clone.querySelector(".like-count").innerHTML = data.like;
     clone.querySelector(".rank").innerHTML = rank;
     clone.querySelector(".contents-name").innerHTML = data.name;
